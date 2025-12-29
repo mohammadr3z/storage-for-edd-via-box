@@ -1,0 +1,115 @@
+/**
+ * Admin Settings Styles for Box EDD Integration
+ */
+
+/* Connected status indicator - Green */
+.edbx-connected-status {
+    color: #00a32a;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 8px 14px;
+    background: #d4edda;
+    border-left: 4px solid #00a32a;
+    border-radius: 0 4px 4px 0;
+}
+
+/* Warning status indicator - Yellow/Orange */
+.edbx-warning-status {
+    color: #856404;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 8px 14px;
+    background: #fff3cd;
+    border-left: 4px solid #f0ad4e;
+    border-radius: 0 4px 4px 0;
+}
+
+/* Notice styling */
+.edbx-notice {
+    padding: 10px 15px;
+    background: #fff3cd;
+    border-left: 4px solid #ffc107;
+    margin: 10px 0;
+    border-radius: 0 4px 4px 0;
+}
+
+/* Permission warning message */
+.edbx-permission-warning {
+    display: inline-block;
+    padding: 8px 12px;
+    background: #fff3cd;
+    border-left: 4px solid #f0ad4e;
+    color: #856404;
+    font-size: 13px;
+    margin-top: 8px;
+    border-radius: 0 4px 4px 0;
+}
+
+/* RTL Support */
+.rtl .edbx-connected-status,
+.rtl .edbx-warning-status,
+.rtl .edbx-notice,
+.rtl .edbx-permission-warning {
+    border-left: none;
+    border-right: 4px solid;
+    border-radius: 4px 0 0 4px;
+}
+
+.rtl .edbx-connected-status {
+    border-right-color: #00a32a;
+}
+
+.rtl .edbx-warning-status,
+.rtl .edbx-permission-warning {
+    border-right-color: #f0ad4e;
+}
+
+.rtl .edbx-notice {
+    border-right-color: #ffc107;
+}
+
+/* Disabled input styling */
+.edbx-disabled {
+    opacity: 0.6;
+    pointer-events: none;
+}
+
+/* Credential input fields */
+.edbx-credential {
+    font-family: monospace;
+}
+
+/* OAuth buttons */
+.edbx-oauth-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.edbx-oauth-button .dashicons {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+}
+
+/* Setup instructions */
+#edd_settings\\[edbx_help\\] ol {
+    margin-left: 20px;
+    list-style: decimal;
+}
+
+#edd_settings\\[edbx_help\\] li {
+    margin-bottom: 8px;
+}
+
+#edd_settings\\[edbx_help\\] code {
+    background: #f0f0f0;
+    padding: 3px 8px;
+    border-radius: 3px;
+    font-size: 12px;
+    word-break: break-all;
+}

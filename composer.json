@@ -1,0 +1,21 @@
+{
+    "name": "mohammadr3z/storage-for-edd-via-box",
+    "description": "Storage for EDD via Box",
+    "type": "wordpress-plugin",
+    "license": "GPL-2.0-or-later",
+    "authors": [
+        {
+            "name": "mohammadr3z",
+            "email": "email@example.com"
+        }
+    ],
+    "require": {
+        "php": ">=7.4",
+        "guzzlehttp/guzzle": "^7.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "EDBX\\": "includes/"
+        }
+    }
+}

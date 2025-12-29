@@ -1,0 +1,182 @@
+=== Storage for EDD via Box ===
+author: mohammadr3z
+Contributors: mohammadr3z
+Tags: easy-digital-downloads, box, storage, cloud, edd
+Requires at least: 5.0
+Tested up to: 6.9
+Stable tag: 1.0.2
+Requires PHP: 7.4
+License: GPL-2.0-or-later
+License URI: https://www.gnu.org/licenses/gpl-2.0.html
+
+Enable secure cloud storage and delivery of your digital products through Box for Easy Digital Downloads.
+
+== Description ==
+
+Storage for EDD via Box is a powerful extension for Easy Digital Downloads that allows you to store and deliver your digital products using Box cloud storage. This plugin provides seamless integration with Box's API, featuring OAuth2 authentication and secure direct download links.
+
+== External services ==
+
+This plugin connects to Box API to manage files, create download links, and handle authentication.
+
+It sends the necessary authentication tokens and file requests to Box servers. This happens when you browse your Box files in the dashboard, upload files, or when a customer downloads a file.
+
+* **Service**: Box API
+* **Used for**: Authentication, file browsing, uploading, and generating download links.
+* **Data sent**: OAuth tokens, file metadata, file content (during upload).
+* **URLs**:
+    * `https://api.box.com` (API calls)
+    * `https://upload.box.com` (File uploads)
+    * `https://account.box.com` (Authentication)
+* **Legal**: [Terms of Service](https://www.box.com/legal/termsofservice), [Privacy Policy](https://www.box.com/legal/privacynotice)
+
+= Key Features =
+
+* **Box Integration**: Store your digital products securely in Box
+* **OAuth2 Authentication**: Secure and easy connection to your Box account
+* **Secure Download Links**: Generates secure links for downloads
+* **Easy File Management**: Upload files directly to Box through WordPress admin
+* **Media Library Integration**: Browse and select files from your Box within WordPress
+* **Folder Support**: Navigate and organize files in folders
+* **Security First**: Built with WordPress security best practices
+* **Developer Friendly**: Clean, well-documented code with hooks and filters
+
+== Installation ==
+
+1. Upload the plugin files to the `/wp-content/plugins/storage-for-edd-via-box` directory, or install the plugin through the WordPress plugins screen directly.
+2. Make sure you have Easy Digital Downloads plugin installed and activated.
+3. Activate the plugin through the 'Plugins' screen in WordPress.
+4. Navigate to Downloads > Settings > Extensions > Box Storage to configure the plugin.
+
+== Configuration ==
+
+= Step 1: Create a Box App =
+
+1. Go to [Box Developer Console](https://app.box.com/developers/console)
+2. Click "Create New App"
+3. Select "Custom App"
+4. Select "User Authentication (OAuth 2.0)"
+5. Give your app a unique name and click "Create App"
+
+= Step 2: Configure Your App =
+
+1. In your app settings, go to the "Configuration" tab
+2. Scroll down to "Application Scopes"
+3. Ensure "Write all files and folders stored in Box" is checked (along with Read)
+4. Click "Save Changes"
+
+= Step 3: Set OAuth Redirect URI =
+
+1. In your app settings, find "OAuth 2.0 Redirect URIs"
+2. Add this URL: `https://your-site.com/wp-admin/admin-post.php?action=edbx_oauth_callback`
+3. Replace `your-site.com` with your actual domain
+4. Click "Save Changes"
+
+= Step 4: Connect in WordPress =
+
+1. Go to Downloads > Settings > Extensions > Box Storage
+2. Enter your Client ID and Client Secret from the Box Developer Console
+3. Save settings
+4. Click "Connect to Box"
+5. Authorize the connection in the Box popup
+6. You're connected!
+
+== Usage ==
+
+= Uploading Files =
+
+1. When creating or editing a download in Easy Digital Downloads
+2. Click on "Upload File" or "Choose File"
+3. Select the "Upload to Box" tab
+4. Choose your file and upload it directly to Box
+5. The file URL will be automatically set with the Box prefix
+
+= File Management =
+
+* Use the "Box Library" tab to browse existing files in your Box
+* Navigate through folders to find your files
+* Click "Select" to use an existing file for your download
+
+== Frequently Asked Questions ==
+
+= How secure are the download links? =
+
+The plugin generates secure download links. When a customer purchases your product, the plugin handles the authentication with Box to deliver the file securely without exposing your private file permanently.
+
+= What file types are supported for upload? =
+
+The plugin supports safe file types including:
+* Archives: ZIP, RAR, 7Z, TAR, GZ
+* Documents: PDF, DOC, DOCX, TXT, RTF, XLS, XLSX, CSV, PPT, PPTX
+* Images: JPG, JPEG, PNG, GIF, WEBP
+* Audio: MP3, WAV, OGG, FLAC, M4A
+* Video: MP4, AVI, MOV, WMV, FLV, WEBM
+* E-books: EPUB, MOBI, AZW, AZW3
+* Web files: CSS, JS, JSON, XML
+
+Dangerous file types (executables, scripts) are automatically blocked for security.
+
+= Can I customize the URL prefix for Box files? =
+
+Yes, developers can customize the URL prefix using the `edbx_url_prefix` filter. Add this code to your theme's functions.php:
+
+`
+function customize_box_url_prefix($prefix) {
+    return 'edd-myprefix://'; // Change to your preferred prefix
+}
+add_filter('edbx_url_prefix', 'customize_box_url_prefix');
+`
+
+= Can I customize the allowed file types (MIME types)? =
+
+Yes, developers can customize the allowed MIME types using the `edbx_allowed_mime_types` filter.
+
+== Screenshots ==
+
+1. Admin settings panel with OAuth connection
+2. Box file browser in media library
+3. File upload interface
+
+= 1.0.2 =
+* Improved: Media library table styling for more consistent file and folder display.
+* Improved: Redesigned folder rows with better icons and refined hover effects.
+* Improved: Enhanced mobile responsiveness for the file browser table.
+* Fixed: Corrected file name and path display order in the media library.
+
+= 1.0.1 =
+* Added: Breadcrumb navigation in file browser - click any folder in the path to navigate directly.
+* Improved: Integrated search functionality directly into the breadcrumb navigation bar for a cleaner UI.
+* Improved: Better navigation experience without needing the Back button.
+* Improved: Enhanced styling for search inputs and buttons, including compact padding.
+* Fixed: RTL layout issues for breadcrumbs and navigation buttons.
+* Cleaned: Removed legacy CSS and unused search container elements.
+
+= 1.0.0 =
+* Initial release
+* Box OAuth2 integration
+* Secure download link generation
+* Media library integration
+* File upload functionality
+* Admin settings interface
+* Security enhancements and validation
+* Internationalization support
+
+
+
+== Support ==
+
+For support and bug reports, please use the WordPress.org plugin support forum.
+
+If you find this plugin helpful, please consider leaving a review on WordPress.org.
+
+== Other Storage Providers ==
+
+Looking for a different storage provider? Check out our other plugins:
+
+* [Storage for EDD via Dropbox](https://wordpress.org/plugins/storage-for-edd-via-dropbox/) - Use Dropbox for your digital product storage
+* [Storage for EDD via OneDrive](https://wordpress.org/plugins/storage-for-edd-via-onedrive/) - Use Microsoft OneDrive for your digital product storage
+* [Storage for EDD via S3-Compatible](https://wordpress.org/plugins/storage-for-edd-via-s3-compatible/) - Use S3-compatible services like MinIO, DigitalOcean Spaces, Linode, Wasabi, and more
+
+== Privacy Policy ==
+
+This plugin requires authorization to access your Box account for file storage and retrieval. It does not collect or store any personal data beyond the OAuth tokens needed to maintain the connection. All file storage and delivery is handled through Box's secure infrastructure.

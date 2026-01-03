@@ -15,20 +15,6 @@ Enable secure cloud storage and delivery of your digital products through Box fo
 
 Storage for EDD via Box is a powerful extension for Easy Digital Downloads that allows you to store and deliver your digital products using Box cloud storage. This plugin provides seamless integration with Box's API, featuring OAuth2 authentication and secure direct download links.
 
-== External services ==
-
-This plugin connects to Box API to manage files, create download links, and handle authentication.
-
-It sends the necessary authentication tokens and file requests to Box servers. This happens when you browse your Box files in the dashboard, upload files, or when a customer downloads a file.
-
-* **Service**: Box API
-* **Used for**: Authentication, file browsing, uploading, and generating download links.
-* **Data sent**: OAuth tokens, file metadata, file content (during upload).
-* **URLs**:
-    * `https://api.box.com` (API calls)
-    * `https://upload.box.com` (File uploads)
-    * `https://account.box.com` (Authentication)
-* **Legal**: [Terms of Service](https://www.box.com/legal/termsofservice), [Privacy Policy](https://www.box.com/legal/privacynotice)
 
 = Key Features =
 
@@ -83,19 +69,23 @@ It sends the necessary authentication tokens and file requests to Box servers. T
 
 == Usage ==
 
-= Uploading Files =
+= Browsing and Selecting Files =
 
 1. When creating or editing a download in Easy Digital Downloads
 2. Click on "Upload File" or "Choose File"
-3. Select the "Upload to Box" tab
-4. Choose your file and upload it directly to Box
-5. The file URL will be automatically set with the Box prefix
+3. Select the "Box Library" tab
+4. Browse your Box storage using the folder navigation
+5. Use the breadcrumb navigation bar to quickly jump to parent folders
+6. Use the search box in the header to filter files by name
+7. Click "Select" to use an existing file for your download
 
-= File Management =
+= Uploading New Files =
 
-* Use the "Box Library" tab to browse existing files in your Box
-* Navigate through folders to find your files
-* Click "Select" to use an existing file for your download
+1. In the "Box Library" tab, click the "Upload" button in the header row
+2. The upload form will appear above the file list
+3. Choose your file and click "Upload"
+4. After a successful upload, the file URL will be automatically set with the Box prefix
+5. Click "Back" to return to the file browser without uploading
 
 == Frequently Asked Questions ==
 
@@ -133,15 +123,25 @@ Yes, developers can customize the allowed MIME types using the `edbx_allowed_mim
 
 == Screenshots ==
 
-1. Admin settings panel with OAuth connection
-2. Box file browser in media library
-3. File upload interface
+1. Admin panel user interface
+2. File selection from Box storage section
+3. File upload to Box storage interface
+
+== Changelog ==
 
 = 1.0.2 =
+* Added: Native search input type with clear ("X") icon support for a cleaner UI.
+* Improved: Mobile breadcrumb navigation with path wrapping for long directory names.
+* Improved: Reduced separator spacing in breadcrumbs on mobile devices.
 * Improved: Media library table styling for more consistent file and folder display.
 * Improved: Redesigned folder rows with better icons and refined hover effects.
 * Improved: Enhanced mobile responsiveness for the file browser table.
 * Fixed: Corrected file name and path display order in the media library.
+* Improved: Standardized header row spacing and title font sizes for UI consistency.
+* Improved: Enhanced notice detail styling for better error/success message readability.
+* Improved: More robust handling of file lists with additional data validation.
+* Security: Standardized use of wp_json_encode() for client-side data.
+* Improved: Renamed root folder label from "Root folder" to "Home" for a cleaner and more intuitive navigation experience.
 
 = 1.0.1 =
 * Added: Breadcrumb navigation in file browser - click any folder in the path to navigate directly.
@@ -162,6 +162,21 @@ Yes, developers can customize the allowed MIME types using the `edbx_allowed_mim
 * Internationalization support
 
 
+
+== External services ==
+
+This plugin connects to Box API to manage files, create download links, and handle authentication.
+
+It sends the necessary authentication tokens and file requests to Box servers. This happens when you browse your Box files in the dashboard, upload files, or when a customer downloads a file.
+
+* **Service**: Box API
+* **Used for**: Authentication, file browsing, uploading, and generating download links.
+* **Data sent**: OAuth tokens, file metadata, file content (during upload).
+* **URLs**:
+    * `https://api.box.com` (API calls)
+    * `https://upload.box.com` (File uploads)
+    * `https://account.box.com` (Authentication)
+* **Legal**: [Terms of Service](https://www.box.com/legal/termsofservice), [Privacy Policy](https://www.box.com/legal/privacynotice)
 
 == Support ==
 

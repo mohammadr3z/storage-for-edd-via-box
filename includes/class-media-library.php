@@ -191,7 +191,7 @@ class EDBX_Media_Library
                         <div class="edbx-breadcrumbs">
                             <?php
                             // Box uses IDs, so we need to get folder details
-                            $browsingName = 'Root folder';
+                            $browsingName = 'Home';
                             $breadcrumb_links = array();
 
                             if ($path !== '0') {
@@ -209,7 +209,7 @@ class EDBX_Media_Library
                                                 'path' => '0',
                                                 '_wpnonce' => wp_create_nonce('media-form')
                                             ), $root_url);
-                                            $breadcrumb_links[] = '<a href="' . esc_url($root_url) . '">' . esc_html__('Root', 'storage-for-edd-via-box') . '</a>';
+                                            $breadcrumb_links[] = '<a href="' . esc_url($root_url) . '">' . esc_html__('Home', 'storage-for-edd-via-box') . '</a>';
                                         } else {
                                             // Parent folder
                                             $folder_url = remove_query_arg(array('edbx_success', 'edbx_filename', 'error'));
@@ -227,7 +227,7 @@ class EDBX_Media_Library
                                         'path' => '0',
                                         '_wpnonce' => wp_create_nonce('media-form')
                                     ), $root_url);
-                                    $breadcrumb_links[] = '<a href="' . esc_url($root_url) . '">' . esc_html__('Root', 'storage-for-edd-via-box') . '</a>';
+                                    $breadcrumb_links[] = '<a href="' . esc_url($root_url) . '">' . esc_html__('Home', 'storage-for-edd-via-box') . '</a>';
                                 }
 
                                 // Current folder (not a link)
@@ -245,7 +245,7 @@ class EDBX_Media_Library
                             } else {
                                 // Bucket (root) link
                                 // Just show bucket name 
-                                echo '<span class="current">' . esc_html__('Root folder', 'storage-for-edd-via-box') . '</span>';
+                                echo '<span class="current">' . esc_html__('Home', 'storage-for-edd-via-box') . '</span>';
                             }
                             ?>
                         </div>
@@ -254,15 +254,10 @@ class EDBX_Media_Library
                     <!-- Moved Search Input -->
                     <?php if (is_array($files) && !empty($files)) { ?>
                         <div class="edbx-search-inline">
-                            <input type="text"
+                            <input type="search"
                                 id="edbx-file-search"
                                 class="edbx-search-input"
                                 placeholder="<?php esc_attr_e('Search files...', 'storage-for-edd-via-box'); ?>">
-                            <button type="button"
-                                id="edbx-clear-search"
-                                class="button">
-                                <?php esc_html_e('Clear', 'storage-for-edd-via-box'); ?>
-                            </button>
                         </div>
                     <?php } ?>
                 </div>
@@ -391,8 +386,6 @@ class EDBX_Media_Library
                                     <td class="column-primary" data-label="<?php esc_attr_e('File Name', 'storage-for-edd-via-box'); ?>">
                                         <div class="edbx-file-display">
                                             <span class="file-name"><?php echo esc_html($file['name']); ?></span>
-                                            <!-- Box doesn't give us path easily, showing ID roughly or nothing -->
-                                            <!-- Dropbox showed relative path. We can skip or show ID if needed for debug -->
                                         </div>
                                     </td>
                                     <td class="column-size" data-label="<?php esc_attr_e('File Size', 'storage-for-edd-via-box'); ?>">
@@ -513,7 +506,7 @@ class EDBX_Media_Library
         ));
 
         wp_add_inline_script('edbx-upload', 'var edbx_url_prefix = "' . esc_js($this->config->getUrlPrefix()) . '";', 'before');
-        wp_add_inline_script('edbx-upload', 'var edbx_max_upload_size = ' . json_encode(wp_max_upload_size()) . ';', 'before');
+        wp_add_inline_script('edbx-upload', 'var edbx_max_upload_size = ' . wp_json_encode(wp_max_upload_size()) . ';', 'before');
 
         wp_add_inline_script('edbx-admin-upload-buttons', 'var edbx_url_prefix = "' . esc_js($this->config->getUrlPrefix()) . '";', 'before');
     }

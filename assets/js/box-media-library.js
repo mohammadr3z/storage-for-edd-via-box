@@ -46,8 +46,8 @@ jQuery(function ($) {
         return false;
     });
 
-    // Search functionality
-    $('#edbx-file-search').on('input', function () {
+    // Search functionality for Box files
+    $('#edbx-file-search').on('input search', function () {
         var searchTerm = $(this).val().toLowerCase();
         var $fileRows = $('.edbx-files-table tbody tr');
         var visibleCount = 0;
@@ -77,10 +77,6 @@ jQuery(function ($) {
         }
     });
 
-    // Clear search
-    $('#edbx-clear-search').click(function () {
-        $('#edbx-file-search').val('').trigger('input');
-    });
 
     // Keyboard shortcut for search
     $(document).keydown(function (e) {

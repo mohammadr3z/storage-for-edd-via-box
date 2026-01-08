@@ -4,7 +4,7 @@ Contributors: mohammadr3z
 Tags: easy-digital-downloads, box, storage, cloud, edd
 Requires at least: 5.0
 Tested up to: 6.9
-Stable tag: 1.0.2
+Stable tag: 1.0.3
 Requires PHP: 7.4
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -128,6 +128,13 @@ Yes, developers can customize the allowed MIME types using the `edbx_allowed_mim
 3. File upload to Box storage interface
 
 == Changelog ==
+
+= 1.0.3 =
+* Added: New "Browse" button next to file inputs for easier file selection.
+* Improved: Modernized file browser UI with a dedicated modal window.
+* Improved: File browser is now context-aware, opening directly to the selected file's folder.
+* Improved: Browse button is automatically hidden if the plugin is not configured.
+* Improved: Removed legacy "Box Library" tab from the standard WordPress media uploader for a cleaner interface.
 
 = 1.0.2 =
 * Added: Native search input type with clear ("X") icon support for a cleaner UI.

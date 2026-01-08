@@ -1,13 +1,18 @@
-/**
- * Box Upload Tab JavaScript
- * Matching Dropbox/S3 plugin pattern
- */
 jQuery(function ($) {
-    // Handler for "Use this file in your Download" button after upload
     $('#edbx_save_link').click(function () {
-        $(parent.window.edd_filename).val($(this).data('edbx-fn'));
-        $(parent.window.edd_fileurl).val(edbx_url_prefix + $(this).data('edbx-path'));
-        parent.window.tb_remove();
+        var filename = $(this).data('edbx-fn');
+        var path = $(this).data('edbx-path');
+        // Box paths are IDs, but our system expects prefix
+        var fileurl = edbx_url_prefix + path;
+
+        if (parent.window && parent.window.edbx_current_name_input && parent.window.edbx_current_url_input) {
+            parent.window.edbx_current_name_input.val(filename);
+            parent.window.edbx_current_url_input.val(fileurl);
+
+            if (parent.EDBXModal) {
+                parent.EDBXModal.close();
+            }
+        }
     });
 
     // File size validation before upload

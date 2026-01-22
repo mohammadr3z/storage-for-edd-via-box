@@ -479,11 +479,13 @@ class EDBX_Media_Library
         wp_register_style('edbx-upload', EDBX_PLUGIN_URL . 'assets/css/box-upload.css', array(), EDBX_VERSION);
         wp_register_style('edbx-media-container', EDBX_PLUGIN_URL . 'assets/css/box-media-container.css', array(), EDBX_VERSION);
         wp_register_style('edbx-modal', EDBX_PLUGIN_URL . 'assets/css/box-modal.css', array('dashicons'), EDBX_VERSION);
+        wp_register_style('edbx-browse-button', EDBX_PLUGIN_URL . 'assets/css/box-browse-button.css', array(), EDBX_VERSION);
 
         // Register scripts
         wp_register_script('edbx-media-library', EDBX_PLUGIN_URL . 'assets/js/box-media-library.js', array('jquery'), EDBX_VERSION, true);
         wp_register_script('edbx-upload', EDBX_PLUGIN_URL . 'assets/js/box-upload.js', array('jquery'), EDBX_VERSION, true);
         wp_register_script('edbx-modal', EDBX_PLUGIN_URL . 'assets/js/box-modal.js', array('jquery'), EDBX_VERSION, true);
+        wp_register_script('edbx-browse-button', EDBX_PLUGIN_URL . 'assets/js/box-browse-button.js', array('jquery', 'edbx-modal'), EDBX_VERSION, true);
 
         // Localize scripts
         wp_localize_script('edbx-media-library', 'edbx_i18n', array(
@@ -518,7 +520,7 @@ class EDBX_Media_Library
                 </button>
             </div>
         </div>
-    <?php
+<?php
     }
 
     /**
@@ -542,94 +544,17 @@ class EDBX_Media_Library
         wp_enqueue_style('edbx-modal');
         wp_enqueue_script('edbx-modal');
 
+        // Enqueue browse button assets
+        wp_enqueue_style('edbx-browse-button');
+        wp_enqueue_script('edbx-browse-button');
+
+        // Localize script with dynamic data
         $box_url = admin_url('media-upload.php?type=edbx_lib&tab=edbx_lib');
-    ?>
-        <style>
-            /* Box Button Styles */
-            .edd-file-box-browse {
-                width: auto !important;
-                flex: 0 0 auto !important;
-                align-self: flex-end !important;
-            }
-
-            @media screen and (max-width: 782px) {
-                .edd-file-box-browse {
-                    width: 100% !important;
-                    display: block;
-                    margin-top: 10px;
-                }
-
-                .edd-file-box-browse .edbx_browse_button {
-                    width: 100% !important;
-                    display: block;
-                }
-            }
-
-            .edd-file-box-browse .edd-form-group__label {
-                display: none !important;
-            }
-
-            .edbx_browse_button {
-                background: #0061d5 !important;
-                color: #fff !important;
-                border-color: #0061d5 !important;
-                padding: 4px 12px !important;
-                height: auto !important;
-                line-height: 1.4 !important;
-                font-size: 13px !important;
-                cursor: pointer !important;
-            }
-
-            .edbx_browse_button:hover,
-            .edbx_browse_button:focus {
-                background: #004eab !important;
-                color: #fff !important;
-                border-color: #004eab !important;
-            }
-        </style>
-        <script type="text/javascript">
-            jQuery(function($) {
-                var boxUrl = '<?php echo esc_js($box_url); ?>';
-                var wpNonce = '<?php echo wp_create_nonce("media-form"); ?>';
-                var modalTitle = '<?php echo esc_js(__('Box Library', 'storage-for-edd-via-box')); ?>';
-                var urlPrefix = '<?php echo esc_js($this->config->getUrlPrefix()); ?>';
-
-                // Event delegation for all browse buttons
-                $(document).on('click', '.edbx_browse_button', function(e) {
-                    e.preventDefault();
-
-                    var $btn = $(this);
-                    var $row = $btn.closest('.edd_repeatable_row');
-
-                    // Store references to the input fields for this row
-                    window.edbx_current_row = $row;
-                    window.edbx_current_name_input = $row.find('input[name^="edd_download_files"][name$="[name]"]');
-                    window.edbx_current_url_input = $row.find('input[name^="edd_download_files"][name$="[file]"]');
-
-                    // Context-Aware: Extract folder path from current URL
-                    var currentUrl = window.edbx_current_url_input.val();
-                    var folderPath = '';
-
-                    if (currentUrl && currentUrl.indexOf(urlPrefix) === 0) {
-                        // Remove prefix
-                        var path = currentUrl.substring(urlPrefix.length);
-                        // Remove filename, keep folder path
-                        var lastSlash = path.lastIndexOf('/');
-                        if (lastSlash !== -1) {
-                            folderPath = path.substring(0, lastSlash);
-                        }
-                    }
-
-                    var modalUrl = boxUrl + '&_wpnonce=' + wpNonce;
-                    if (folderPath) {
-                        modalUrl += '&path=' + encodeURIComponent(folderPath);
-                    }
-
-                    // Open Modal
-                    EDBXModal.open(modalUrl, modalTitle);
-                });
-            });
-        </script>
-<?php
+        wp_localize_script('edbx-browse-button', 'edbx_browse_button', array(
+            'modal_url'   => $box_url,
+            'modal_title' => __('Box Library', 'storage-for-edd-via-box'),
+            'nonce'       => wp_create_nonce('media-form'),
+            'url_prefix'  => $this->config->getUrlPrefix()
+        ));
     }
 }

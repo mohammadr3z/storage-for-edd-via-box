@@ -1,0 +1,45 @@
+/**
+ * Box Browse Button Styles
+ * Used in EDD download files section
+ */
+
+.edd-file-box-browse {
+    width: auto !important;
+    flex: 0 0 auto !important;
+    align-self: flex-end !important;
+}
+
+@media screen and (max-width: 782px) {
+    .edd-file-box-browse {
+        width: 100% !important;
+        display: block;
+        margin-top: 10px;
+    }
+
+    .edd-file-box-browse .edbx_browse_button {
+        width: 100% !important;
+        display: block;
+    }
+}
+
+.edd-file-box-browse .edd-form-group__label {
+    display: none !important;
+}
+
+.edbx_browse_button {
+    background: #0061d5 !important;
+    color: #fff !important;
+    border-color: #0061d5 !important;
+    padding: 4px 12px !important;
+    height: auto !important;
+    line-height: 1.4 !important;
+    font-size: 13px !important;
+    cursor: pointer !important;
+}
+
+.edbx_browse_button:hover,
+.edbx_browse_button:focus {
+    background: #004eab !important;
+    color: #fff !important;
+    border-color: #004eab !important;
+}

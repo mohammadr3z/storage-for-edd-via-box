@@ -36,56 +36,30 @@ Storage for EDD via Box is a powerful extension for Easy Digital Downloads that 
 
 == Configuration ==
 
-= Step 1: Create a Box App =
-
-1. Go to [Box Developer Console](https://app.box.com/developers/console)
-2. Click "Create New App"
-3. Select "Custom App"
-4. Select "User Authentication (OAuth 2.0)"
-5. Give your app a unique name and click "Create App"
-
-= Step 2: Configure Your App =
-
-1. In your app settings, go to the "Configuration" tab
-2. Scroll down to "Application Scopes"
-3. Ensure "Write all files and folders stored in Box" is checked (along with Read)
-4. Click "Save Changes"
-
-= Step 3: Set OAuth Redirect URI =
-
-1. In your app settings, find "OAuth 2.0 Redirect URIs"
-2. Add this URL: `https://your-site.com/wp-admin/admin-post.php?action=edbx_oauth_callback`
-3. Replace `your-site.com` with your actual domain
-4. Click "Save Changes"
-
-= Step 4: Connect in WordPress =
-
-1. Go to Downloads > Settings > Extensions > Box Storage
-2. Enter your Client ID and Client Secret from the Box Developer Console
-3. Save settings
-4. Click "Connect to Box"
-5. Authorize the connection in the Box popup
-6. You're connected!
+1. Create a Box App at [Box Developer Console](https://app.box.com/developers/console) with OAuth 2.0 authentication
+2. Set OAuth Redirect URI to: `https://your-site.com/wp-admin/admin-post.php?action=edbx_oauth_callback`
+3. Go to Downloads > Settings > Extensions > Box Storage
+4. Enter your Client ID and Client Secret
+5. Save settings and click "Connect to Box"
 
 == Usage ==
 
 = Browsing and Selecting Files =
 
 1. When creating or editing a download in Easy Digital Downloads
-2. Click on "Upload File" or "Choose File"
-3. Select the "Box Library" tab
-4. Browse your Box storage using the folder navigation
-5. Use the breadcrumb navigation bar to quickly jump to parent folders
-6. Use the search box in the header to filter files by name
-7. Click "Select" to use an existing file for your download
+2. Click the "Browse Box" button next to the file URL field
+3. Browse your Box storage using the folder navigation
+4. Use the breadcrumb navigation bar to quickly jump to parent folders
+5. Use the search box in the header to filter files by name
+6. Click "Select" to use an existing file for your download
 
 = Uploading New Files =
 
-1. In the "Box Library" tab, click the "Upload" button in the header row
+1. In the Box browser, click the "Upload" button in the header row
 2. The upload form will appear above the file list
 3. Choose your file and click "Upload"
 4. After a successful upload, the file URL will be automatically set with the Box prefix
-5. Click "Back" to return to the file browser without uploading
+5. Click the button again to hide the upload form
 
 == Frequently Asked Questions ==
 

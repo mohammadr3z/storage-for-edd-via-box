@@ -433,7 +433,7 @@ class EDBX_Media_Library
                 wp_die(esc_html__('Security check failed.', 'storage-for-edd-via-box'));
             }
         }
-        return !empty($_GET['path']) ? sanitize_text_field(wp_unslash($_GET['path'])) : '';
+        return !empty($_GET['path']) ? trim(sanitize_text_field(wp_unslash($_GET['path']))) : '';
     }
 
     /**
@@ -443,10 +443,13 @@ class EDBX_Media_Library
      */
     private function formatFileSize($size)
     {
-        if ($size == 0) return '0 B';
+        if ($size === 0) return '0 B';
 
         $units = array('B', 'KB', 'MB', 'GB', 'TB');
         $power = floor(log($size, 1024));
+        if ($power >= count($units)) {
+            $power = count($units) - 1;
+        }
 
         return round($size / pow(1024, $power), 2) . ' ' . $units[$power];
     }

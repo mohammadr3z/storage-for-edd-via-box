@@ -30,12 +30,7 @@ jQuery(function ($) {
             }
         }
 
-        var modalUrl = edbx_browse_button.modal_url + '&_wpnonce=' + edbx_browse_button.nonce;
-        if (folderPath) {
-            modalUrl += '&path=' + encodeURIComponent(folderPath);
-        }
-
-        // Open Modal
-        EDBXModal.open(modalUrl, edbx_browse_button.modal_title);
+        // Open Modal with folder path (Box uses paths, not folder IDs for context-aware)
+        EDBXModal.open(folderPath, edbx_browse_button.modal_title);
     });
 });

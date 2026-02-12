@@ -154,6 +154,8 @@ body.rtl .edbx-nav-back {
     color: #2271b1;
     text-decoration: none;
     font-weight: 600;
+    outline: none;
+    box-shadow: none;
 }
 
 .edbx-breadcrumbs a:hover {
@@ -315,7 +317,7 @@ body.rtl .edbx-files-table td.column-size {
     background: #fef3c7;
 }
 
-.edbx-folder-row .folder-link {
+.edbx-folder-row .folder-link:not(.button-secondary) {
     display: inline-flex;
     align-items: center;
     gap: 8px;
@@ -331,13 +333,13 @@ body.rtl .edbx-files-table td.column-size {
     margin: -4px -8px;
 }
 
-.edbx-folder-row .folder-link:hover {
+.edbx-folder-row .folder-link:not(.button-secondary):hover {
     color: #2271b1;
     background: rgba(34, 113, 177, 0.08);
 }
 
 /* Small folder icon next to text */
-.edbx-folder-row .folder-link .dashicons {
+.edbx-folder-row .folder-link:not(.button-secondary) .dashicons {
     color: #d97706;
     font-size: 18px;
     width: 18px;
@@ -349,11 +351,11 @@ body.rtl .edbx-files-table td.column-size {
     flex-shrink: 0;
 }
 
-.edbx-folder-row .folder-link:hover .dashicons {
+.edbx-folder-row .folder-link:not(.button-secondary):hover .dashicons {
     color: #2271b1;
 }
 
-.edbx-folder-row .folder-link .file-name {
+.edbx-folder-row .folder-link:not(.button-secondary) .file-name {
     line-height: 1.4;
     display: inline-block;
     vertical-align: middle;

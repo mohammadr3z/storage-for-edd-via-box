@@ -381,4 +381,68 @@ class EDBX_Box_Client
 
         return $pathString;
     }
+
+    /**
+     * Resolve a folder path string to a Folder ID
+     * 
+     * @param string $path Full path e.g. "Folder/Subfolder"
+     * @return string Folder ID or '0' for root
+     */
+    public function getFolderIdByPath($path)
+    {
+        $path = trim($path, '/');
+        if (empty($path)) {
+            return '0';
+        }
+
+
+        // Check cache first
+        $cacheKey = 'edbx_folder_path_' . md5($path);
+        $cachedId = get_transient($cacheKey);
+        if ($cachedId) {
+            return $cachedId;
+        }
+
+        $segments = explode('/', $path);
+        $currentId = '0'; // Start at root
+
+        foreach ($segments as $segment) {
+            if (empty($segment)) {
+                continue;
+            }
+
+            try {
+                $response = $this->request('GET', "folders/{$currentId}/items", [
+                    'query' => [
+                        'limit' => 1000,
+                        'fields' => 'id,name,type'
+                    ]
+                ]);
+                $data = json_decode($response->getBody(), true);
+
+                $foundInLevel = false;
+                if (isset($data['entries'])) {
+                    foreach ($data['entries'] as $entry) {
+                        if ($entry['name'] === $segment && $entry['type'] === 'folder') {
+                            $currentId = $entry['id'];
+                            $foundInLevel = true;
+                            break;
+                        }
+                    }
+                }
+
+                if (!$foundInLevel) {
+                    // Folder not found, return root
+                    return '0';
+                }
+            } catch (Exception $e) {
+                $this->config->debug('Folder path resolution failed at segment ' . $segment . ': ' . $e->getMessage());
+                return '0';
+            }
+        }
+
+        // Cache for 1 hour
+        set_transient($cacheKey, $currentId, HOUR_IN_SECONDS);
+        return $currentId;
+    }
 }

@@ -17,76 +17,70 @@ class EDBX_Box_Uploader
     {
         $this->config = new EDBX_Box_Config();
 
-        // Hook for admin-post actions to handle upload form submission
-        add_action('admin_post_edbx_upload', array($this, 'processUpload'));
+        // AJAX Handler for upload
+        add_action('wp_ajax_edbx_ajax_upload', array($this, 'ajaxUpload'));
     }
 
     /**
-     * Process File Upload
+     * AJAX Upload Handler
      */
-    public function processUpload()
+    public function ajaxUpload()
     {
         // Verify Nonce
-        // phpcs:ignore WordPress.Security.NonceVerification.Missing -- Nonce verification is happening right here
         if (!isset($_POST['edbx_nonce']) || !wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['edbx_nonce'])), 'edbx_upload')) {
-            wp_die(esc_html__('Security check failed', 'storage-for-edd-via-box'));
+            wp_send_json_error(esc_html__('Security check failed.', 'storage-for-edd-via-box'));
         }
 
         // Check permissions
         if (!current_user_can('edit_products')) {
-            wp_die(esc_html__('You do not have permission to upload files.', 'storage-for-edd-via-box'));
+            wp_send_json_error(esc_html__('You do not have permission to upload files.', 'storage-for-edd-via-box'));
         }
 
-        // Validate upload before processing
-        if (!$this->validateUpload()) {
-            return;
+        // Validate upload
+        $validation = $this->validateUploadAjax();
+        if ($validation !== true) {
+            wp_send_json_error($validation);
         }
 
-        // phpcs:ignore WordPress.Security.NonceVerification.Missing -- Nonce verified at top of function.
+        // Get folder ID
         $folderId = !empty($_POST['edbx_folder']) ? sanitize_text_field(wp_unslash($_POST['edbx_folder'])) : '0';
-        $redirectUrl = admin_url('media-upload.php?type=edbx_lib&tab=edbx_lib&folder=' . $folderId);
 
-        // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.ValidatedSanitizedInput.InputNotValidated -- Filename is sanitized using sanitize_file_name and validated in validateUpload()
+        // Process file
         $fileName = sanitize_file_name($_FILES['edbx_file']['name']);
-        // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.ValidatedSanitizedInput.InputNotValidated -- tmp_name is a system path and validated in validateUpload()
         $filePath = $_FILES['edbx_file']['tmp_name'];
-        // phpcs:enable WordPress.Security.NonceVerification.Missing
 
         try {
             $uploadedFile = $this->uploadFile($filePath, $fileName, $folderId);
 
             if ($uploadedFile) {
-                // Resolved Folder Path
+                // Get full path for the file
                 $boxClient = new EDBX_Box_Client();
                 $folderPath = $boxClient->getFolderPath($folderId);
                 $fullPath = trim($folderPath . '/' . $uploadedFile['name'], '/');
 
-                // Success
-                $redirectUrl = add_query_arg(array(
-                    'edbx_success' => '1',
-                    'edbx_filename' => $uploadedFile['name'], // Name for display
-                    'edbx_file_id' => $fullPath,   // PASSPATH instead of ID
-                    'folder' => $folderId
-                ), $redirectUrl);
-
-                wp_safe_redirect($redirectUrl);
-                exit;
+                // Return success with file info (matching Dropbox format)
+                wp_send_json_success(array(
+                    'message' => esc_html__('File uploaded successfully!', 'storage-for-edd-via-box'),
+                    'filename' => $uploadedFile['name'],
+                    'path' => $fullPath,
+                    // Also include the link format for Use this file button
+                    'edbx_link' => ltrim($fullPath, '/')
+                ));
             }
         } catch (Exception $e) {
-            $this->redirectWithError($redirectUrl, $e->getMessage());
+            wp_send_json_error($e->getMessage());
         }
 
-        $this->redirectWithError($redirectUrl, 'Unknown error occurred.');
+        wp_send_json_error(esc_html__('Unknown error occurred.', 'storage-for-edd-via-box'));
     }
 
     /**
-     * Validate file upload.
-     * @return bool
+     * Validate upload for AJAX (returns error message or true)
+     * @return bool|string
      */
-    private function validateUpload()
+    private function validateUploadAjax()
     {
-        // phpcs:disable WordPress.Security.NonceVerification.Missing -- Nonce verified in processUpload() before this method is called.
-        // Check for file existence and its components
+        // Check for file existence
         if (
             !isset($_FILES['edbx_file']) ||
             !isset($_FILES['edbx_file']['name']) ||
@@ -94,46 +88,35 @@ class EDBX_Box_Uploader
             !isset($_FILES['edbx_file']['size']) ||
             empty($_FILES['edbx_file']['name'])
         ) {
-            wp_die(esc_html__('Please select a file to upload.', 'storage-for-edd-via-box'), esc_html__('Error', 'storage-for-edd-via-box'), array('back_link' => true));
-            return false;
+            return esc_html__('Please select a file to upload.', 'storage-for-edd-via-box');
         }
 
         // Check uploaded file security
-        // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.ValidatedSanitizedInput.MissingUnslash -- tmp_name is a system path
         if (!is_uploaded_file($_FILES['edbx_file']['tmp_name'])) {
-            wp_die(esc_html__('Invalid file upload.', 'storage-for-edd-via-box'), esc_html__('Error', 'storage-for-edd-via-box'), array('back_link' => true));
-            return false;
+            return esc_html__('Invalid file upload.', 'storage-for-edd-via-box');
         }
 
         // Validate file type
-        // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.ValidatedSanitizedInput.MissingUnslash -- Filename is sanitized using sanitize_file_name
         if (!$this->isAllowedFileType(sanitize_file_name($_FILES['edbx_file']['name']))) {
-            wp_die(esc_html__('File type not allowed. Only safe file types are permitted.', 'storage-for-edd-via-box'), esc_html__('Error', 'storage-for-edd-via-box'), array('back_link' => true));
-            return false;
+            return esc_html__('File type not allowed. Only safe file types are permitted.', 'storage-for-edd-via-box');
         }
 
-        // Validate Content-Type (MIME type)
-        // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.ValidatedSanitizedInput.MissingUnslash -- $_FILES array passed to validateFileContentType() where tmp_name is used as system path and name is sanitized via sanitize_file_name() with wp_check_filetype_and_ext() validation.
+        // Validate Content-Type
         if (!$this->validateFileContentType($_FILES['edbx_file'])) {
-            wp_die(esc_html__('File content type validation failed. The file may be corrupted or have an incorrect extension.', 'storage-for-edd-via-box'), esc_html__('Error', 'storage-for-edd-via-box'), array('back_link' => true));
-            return false;
+            return esc_html__('File content type validation failed.', 'storage-for-edd-via-box');
         }
 
-        // Check and sanitize file size
-        // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- File size is validated/sanitized using absint
+        // Check file size
         $fileSize = absint($_FILES['edbx_file']['size']);
         $maxSize = wp_max_upload_size();
         if ($fileSize > $maxSize || $fileSize <= 0) {
-            wp_die(
+            return sprintf(
                 // translators: %s: Maximum upload file size.
-                sprintf(esc_html__('File size too large. Maximum allowed size is %s', 'storage-for-edd-via-box'), esc_html(size_format($maxSize))),
-                esc_html__('Error', 'storage-for-edd-via-box'),
-                array('back_link' => true)
+                esc_html__('File size too large. Maximum allowed size is %s', 'storage-for-edd-via-box'),
+                esc_html(size_format($maxSize))
             );
-            return false;
         }
 
-        // phpcs:enable WordPress.Security.NonceVerification.Missing
         return true;
     }
 
@@ -355,35 +338,37 @@ class EDBX_Box_Uploader
         // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fopen -- Required for Guzzle multipart upload stream, WP_Filesystem not applicable here.
         $fileHandle = fopen($sourcePath, 'r');
 
-        $response = $client->request('POST', $url, [
-            'headers' => [
-                'Authorization' => 'Bearer ' . $accessToken
-            ],
-            'multipart' => [
-                [
-                    'name' => 'attributes',
-                    'contents' => $attributes
+        try {
+            $response = $client->request('POST', $url, [
+                'headers' => [
+                    'Authorization' => 'Bearer ' . $accessToken
                 ],
-                [
-                    'name' => 'file',
-                    'contents' => $fileHandle,
-                    'filename' => $fileName
+                'multipart' => [
+                    [
+                        'name' => 'attributes',
+                        'contents' => $attributes
+                    ],
+                    [
+                        'name' => 'file',
+                        'contents' => $fileHandle,
+                        'filename' => $fileName
+                    ]
                 ]
-            ]
-        ]);
+            ]);
 
-        $data = json_decode($response->getBody(), true);
+            $data = json_decode($response->getBody(), true);
 
-        if (isset($data['entries'][0])) {
-            return $data['entries'][0];
+            if (isset($data['entries'][0])) {
+                return $data['entries'][0];
+            }
+
+            throw new Exception('Invalid response from Box API');
+        } finally {
+            // Ensure file handle is closed even if request fails
+            // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fclose
+            if (is_resource($fileHandle)) {
+                fclose($fileHandle);
+            }
         }
-
-        throw new Exception('Invalid response from Box API');
-    }
-
-    private function redirectWithError($url, $message)
-    {
-        wp_safe_redirect(add_query_arg('error', urlencode($message), $url));
-        exit;
     }
 }

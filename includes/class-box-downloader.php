@@ -17,9 +17,6 @@ class EDBX_Box_Downloader
     {
         $this->config = new EDBX_Box_Config();
         $this->client = new EDBX_Box_Client();
-
-        // Hook into EDD file download
-        add_filter('edd_requested_file', array($this, 'generateUrl'), 10, 3);
     }
 
     /**

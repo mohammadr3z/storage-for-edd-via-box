@@ -6,5 +6,17 @@ $vendorDir = dirname(__DIR__);
 $baseDir = dirname($vendorDir);
 
 return array(
+    'Attribute' => $vendorDir . '/symfony/polyfill-php80/Resources/stubs/Attribute.php',
     'Composer\\InstalledVersions' => $vendorDir . '/composer/InstalledVersions.php',
+    'EDBX_Admin_Settings' => $baseDir . '/includes/class-admin-settings.php',
+    'EDBX_BoxStorage' => $baseDir . '/includes/class-main-plugin.php',
+    'EDBX_Box_Client' => $baseDir . '/includes/class-box-client.php',
+    'EDBX_Box_Config' => $baseDir . '/includes/class-box-config.php',
+    'EDBX_Box_Downloader' => $baseDir . '/includes/class-box-downloader.php',
+    'EDBX_Box_Uploader' => $baseDir . '/includes/class-box-uploader.php',
+    'EDBX_Media_Library' => $baseDir . '/includes/class-media-library.php',
+    'PhpToken' => $vendorDir . '/symfony/polyfill-php80/Resources/stubs/PhpToken.php',
+    'Stringable' => $vendorDir . '/symfony/polyfill-php80/Resources/stubs/Stringable.php',
+    'UnhandledMatchError' => $vendorDir . '/symfony/polyfill-php80/Resources/stubs/UnhandledMatchError.php',
+    'ValueError' => $vendorDir . '/symfony/polyfill-php80/Resources/stubs/ValueError.php',
 );

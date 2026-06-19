@@ -3,9 +3,8 @@
 /**
  * Plugin Name: Storage for EDD via Box
  * Description: Enable secure cloud storage and delivery of your digital products through Box for Easy Digital Downloads.
- * Version: 1.1.0
+ * Version: 1.1.1
  * Author: mohammadr3z
- * Requires Plugins: easy-digital-downloads
  * License: GPL-2.0-or-later
  * License URI: https://www.gnu.org/licenses/gpl-2.0.html
  * Text Domain: storage-for-edd-via-box
@@ -28,7 +27,7 @@ if (!defined('EDBX_PLUGIN_URL')) {
     define('EDBX_PLUGIN_URL', plugin_dir_url(__FILE__));
 }
 if (!defined('EDBX_VERSION')) {
-    define('EDBX_VERSION', '1.1.0');
+    define('EDBX_VERSION', '1.1.1');
 }
 
 // Load plugin classes
@@ -42,6 +41,20 @@ require_once EDBX_PLUGIN_DIR . 'includes/class-main-plugin.php';
 
 // Initialize plugin on plugins_loaded
 add_action('plugins_loaded', function () {
+    if (!class_exists('Easy_Digital_Downloads')) {
+        add_action('admin_notices', function () {
+            ?>
+            <div class="notice notice-error">
+                <p>
+                    <strong><?php esc_html_e('Storage for EDD via Box:', 'storage-for-edd-via-box'); ?></strong>
+                    <?php esc_html_e('Easy Digital Downloads (Free or Pro) is required but not active. Please install and activate it first.', 'storage-for-edd-via-box'); ?>
+                </p>
+            </div>
+            <?php
+        });
+        return;
+    }
+
     new EDBX_BoxStorage();
 });
 
